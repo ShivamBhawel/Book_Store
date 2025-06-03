@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require('express');
 const cors = require("cors");
-const db = require('../connection/db');
+const db = require("./connection/db")
 const userroute = require('./router/user');
 const bookrouter = require('./router/book');
 const favourite = require('./router/favourite');
