@@ -3,12 +3,18 @@ import axios from 'axios';
 import Loader from '../Loader/Loader';
 import { useParams } from 'react-router-dom';
 import { GrLanguage } from "react-icons/gr";
+import { FaHeart } from "react-icons/fa";
+import { IoCart } from "react-icons/io5";
+import { useSelector } from 'react-redux';
+
 
 const ViewBookDetails = () => {
   const { id } = useParams();
   const [Data, setData] = useState(null);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const role = useSelector((state) => state.auth.role);
   const [loading, setLoading] = useState(true); // optional loading state
-
+ 
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -26,11 +32,19 @@ const ViewBookDetails = () => {
   if (loading || !Data) return <div  className='h-screen bg-zinc-900 flex items-center justify-center my-8'><Loader /></div>; // show loader or return null
 
   return (
-    <div className='px-12 py-8 bg-zinc-900 flex flex-col md:flex-row gap-8'>
-      <div className='bg-zinc-800 rounded p-4 h-[60vh] lg:h-[88vh]  w-full lg:w-3/6  flex flex-col md:flex-row items-center justify-center'>
-        <img src={Data.url} alt='Book' className='h-[50vh] lg:h-[70vh] rounded' />
+     <>
+      {Data && ( 
+        <div className='px-4 md:px-12 py-8 bg-zinc-900 flex flex-col md:flex-row gap-8 items-start'>
+      <div className='   w-full lg:w-3/6   '>
+       <div className='flex justify-around p-12 bg-zinc-800 rounded'>  
+         <img src={Data.url} alt='Book' className='h-[50vh] lg:h-[70vh] rounded object-cover' />
+         <div className='flex md:flex-col'> 
+         <button className='bg-white rounded-full text-3xl p-3 text-red-600'> <FaHeart /> </button>
+         <button className='bg-white rounded-full text-3xl p-3 mt-8 text-blue-600'> <IoCart /> </button>
+        </div>
+       </div>
       </div>
-      <div className='p-4 w-3/6'>
+      <div className='p-4 w-full lg:w-3/6'>
         <h1 className='text-4xl text-zinc-300 font-semibold'>{Data.title}</h1>
         <p className='text-zinc-400 mt-1'>by {Data.author}</p>
         <p className='text-zinc-500 mt-4 text-xl'>{Data.desc}</p>
@@ -39,6 +53,8 @@ const ViewBookDetails = () => {
         <p className='mt-4 text-zinc-100 text-3xl font-semibold'>Price : ₹ {Data.price} {" "}</p>
       </div>
     </div>
+      )}
+     </>
   );
 };
 

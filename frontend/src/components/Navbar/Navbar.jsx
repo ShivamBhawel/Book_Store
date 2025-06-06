@@ -38,7 +38,9 @@ const Navbar = () => {
             <h1 className="text-2xl font-semibold">Book Heaven</h1>
         </Link>
          <div className="nav-links-bookheaven block md:flex items-center gap-4">
-           <div className="hidden md:flex gap-4"> {Links.map((items,i) => (
+           <div className="hidden md:flex gap-4">
+            {Links.map((items,i) => (  
+
                 <Link to={items.link} 
                 className="hover:text-blue-500 transition-all duration-300"
                  key={i}> {items.title} 
@@ -46,12 +48,12 @@ const Navbar = () => {
                  </Link>
             ))}
         </div>
-        <div className="hidden md:flex gap-4"> 
+        {isLoggedIn === false && <div className="hidden md:flex gap-4"> 
                <Link to="/Login"
                 className="px-4 py-1 border border-blue-500 rounded hover:bg-white hover:text-zinc-800 transition-all duration-300">login</Link>
                <Link to="/SignUp"
                className="px-4 py-1 bg-blue-500  rounded hover:bg-white hover:text-zinc-800 transition-all duration-300">SignUp</Link>
-         </div>
+         </div>}
          <button className= 'block md:hidden text-white text-2xl hover:text-zinc-400' onClick={()=>
           mobilenav ==="hidden" ?
           setmobilenav("block") :
@@ -66,7 +68,13 @@ const Navbar = () => {
         {Links.map((items,i) => (
                 <Link to={items.link} 
                 className="text-white text-3xl font-semibold mb-8 hover:text-blue-500 transition-all duration-300"
-                 key={i}> {items.title} 
+                 key={i} 
+                 onClick={ () => 
+                    mobilenav === "hidden"
+                    ? setmobilenav("block")
+                    : setmobilenav("hidden")
+                 }
+                 > {items.title} {" "}
 
                  </Link>
             ))}
@@ -84,7 +92,7 @@ const Navbar = () => {
               
     </div>
     </>
-  );
+  )
 };
 
 export default Navbar
