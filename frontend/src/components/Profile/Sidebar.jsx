@@ -13,15 +13,15 @@ const Sidebar = ( {data}) => {
        </div>
         <div className='w-full flex-col items-ceter hidden lg:flex'>
        <Link 
-        to="/profile/favourites"
+        to="/Profile"
         className="text-zinc-100 font-semibold w-full py-2 mt-4 text-center hover:bg-zinc-900 rounded transition-all duration-300"
         > 
         Favourites
        </Link>
 
        <Link 
-        to="/profile/orderHistory"
-        className="text-zinc-100 font-semibold w-full py-2 mt-4 text-center hover:bg-white hover:text-zinc-900 rounded transition-all duration-300"
+        to="/Profile/orderHistory"
+        className="text-zinc-100 font-semibold w-full py-2 mt-4 text-center hover:bg-zinc-900 rounded transition-all duration-300"
         > 
         Order History 
        </Link>

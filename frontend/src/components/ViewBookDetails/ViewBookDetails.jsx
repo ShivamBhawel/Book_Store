@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import { GrLanguage } from "react-icons/gr";
 import { FaHeart } from "react-icons/fa";
 import { IoCart } from "react-icons/io5";
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 import { useSelector } from 'react-redux';
 
 
@@ -29,20 +31,58 @@ const ViewBookDetails = () => {
     fetch();
   }, []);
 
+  const headers = {
+   id:localStorage.getItem("id"),
+   authorization: `Bearer ${localStorage.getItem("token")}`,
+   bookid:id,
+ };
+
+   const handelFavorite = async() => {
+
+     const response = await axios.put('http://localhost:2000/favourite/add-book-to-favourite',{},{headers});
+     alert(response.data.message)
+   }
+
+
+   const AddToCart = async () => {
+
+    const res = await axios.put('http://localhost:2000/cart/add-to-cart',{},{headers});
+    alert(res.data.message);
+   }
+
   if (loading || !Data) return <div  className='h-screen bg-zinc-900 flex items-center justify-center my-8'><Loader /></div>; // show loader or return null
 
   return (
      <>
       {Data && ( 
-        <div className='px-4 md:px-12 py-8 bg-zinc-900 flex flex-col md:flex-row gap-8 items-start'>
+        <div className='px-4 md:px-12 py-8 bg-zinc-900 flex flex-col lg:flex-row gap-8 items-start'>
       <div className='   w-full lg:w-3/6   '>
-       <div className='flex justify-around p-12 bg-zinc-800 rounded'>  
-         <img src={Data.url} alt='Book' className='h-[50vh] lg:h-[70vh] rounded object-cover' />
-         <div className='flex md:flex-col'> 
-         <button className='bg-white rounded-full text-3xl p-3 text-red-600'> <FaHeart /> </button>
-         <button className='bg-white rounded-full text-3xl p-3 mt-8 text-blue-600'> <IoCart /> </button>
+       <div className='flex flex-col lg:flex-row justify-around p-12 bg-zinc-800 rounded'>  
+         <img src={Data.url} alt='Book' className='h-[50vh] md:h-[60vh] lg:h-[70vh] rounded ' />
+        {isLoggedIn === true && role === "user" && (
+           <div className='flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-8 lg:mt-0'> 
+         <button className='bg-white rounded mt-8 lg:rounded-full text-3xl p-3 text-red-600 flex items-center justify-center'
+          onClick={handelFavorite}> <FaHeart /> 
+          <span className='ms-4 block lg:hidden'> Favourites</span>
+          </button>
+         <button className='bg-blue-600 rounded mt-8 lg:rounded-full text-3xl p-3  lg:mt-8 text-white flex items-center justify-center' onClick={AddToCart}> <IoCart /> 
+         <span className='ms-4 block lg:hidden'>add to cart</span>
+          </button>
         </div>
+        )}
        </div>
+
+     {isLoggedIn === true && role === "admin" && (
+           <div className='flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-8 lg:mt-0'> 
+         <button className='bg-white  rounded mt-8 lg:rounded-full text-3xl p-3 text-black flex items-center justify-center'> <FaEdit />
+          <span className='ms-4 block lg:hidden'>Edit Book</span>
+          </button>
+         <button className='bg-white  rounded mt-8  lg:rounded-full text-3xl p-3  lg:mt-8 text-red-500 flex items-center justify-center'> <MdDeleteForever />
+         <span className='ms-4 block lg:hidden'>Delete Book</span>
+          </button>
+        </div>
+        )}
+
       </div>
       <div className='p-4 w-full lg:w-3/6'>
         <h1 className='text-4xl text-zinc-300 font-semibold'>{Data.title}</h1>
