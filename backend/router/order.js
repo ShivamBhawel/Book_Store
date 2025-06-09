@@ -5,28 +5,32 @@ const {authenticateToken} = require("./userAuth");
 const Book = require("../models/book");
 
 //place order 
-router.post("/place-order" , authenticateToken , async (req,res) => {
-    try{
-          const id = req.header.id;
-          const order = req.body;
-          for(orderdata of order){
-             const neworder = new Order({user:id,book:orderdata._id});
-             const orderDataFromDb = await neworder.save();
-             await User.findByIdAndUpdate(id,{
-                $push:{orders:orderDataFromDb},
-             });
-             await User.findByIdAndUpdate(id,{
-                $pull:{cart:orderdata._id},
-             });
-          }
-       return res.json({
-        status:"Success",
-        message:"order Placed Successfully",
-       });
+router.post("/place-order", authenticateToken, async (req, res) => {
+  try {
+    const id = req.headers.id;
+    const order = req.body.order;
 
-    }catch(err){
-        res.status(500).json({Message:"Internal server Error !",err});
+    for (const orderdata of order) {
+      const neworder = new Order({ user: id, book: orderdata._id });
+      const orderDataFromDb = await neworder.save();
+
+      await User.findByIdAndUpdate(id, {
+        $push: { orders: orderDataFromDb._id },
+      });
+
+      await User.findByIdAndUpdate(id, {
+        $pull: { cart: orderdata._id },
+      });
     }
+
+    return res.json({
+      status: "Success",
+      message: "Order Placed Successfully",
+    });
+  } catch (err) {
+    console.error("Server error:", err);
+    res.status(500).json({ message: "Internal server Error !", error: err.message });
+  }
 });
 
 router.get('/get-order-history' , authenticateToken , async (req,res) =>{

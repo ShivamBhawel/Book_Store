@@ -13,8 +13,8 @@ const orderSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        default:"order place",
-        enum :["order placed" , "out for delivery" , "Deleverd" , "Cancelled" ],
+        default: "order placed",
+       enum: ["order placed", "out for delivery", "Delivered", "Cancelled"]
     },
 }, 
  {timestamps:true}

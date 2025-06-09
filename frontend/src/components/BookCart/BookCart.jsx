@@ -2,17 +2,29 @@ import axios from 'axios';
 import React from 'react'
 import { GrLanguage } from 'react-icons/gr';
 import { Link } from 'react-router-dom';
-const BookCart = ({data , favourites}) => {
+const BookCart = ({data , favourites , onRemove}) => {
   const headers = {
     id:localStorage.getItem("id"),
     authorization:`Bearer ${localStorage.getItem("token")}`,
     bookid:data._id,
   };
-   const removebook = async () => {
+  const removebook = async () => {
+  try {
+    const res = await axios.put(
+      "http://localhost:2000/favourite/remove-book-from-favourite",
+      {},
+      { headers }
+    );
+    alert(res.data.message);
 
-      const res = await axios.put("http://localhost:2000/favourite/remove-book-from-favourite",{},{headers});
-      alert(res.data.message);
-   }
+    // ✅ Update the UI
+    onRemove(data._id);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Failed to remove book from favourites.");
+  }
+};
+
   return (
    <div className='bg-zinc-800 rounded p-4 flex flex-col'>
       <Link to={`/view-book-details/${data._id}`}> 
