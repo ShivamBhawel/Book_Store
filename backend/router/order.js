@@ -50,8 +50,10 @@ router.get('/get-order-history' , authenticateToken , async (req,res) =>{
            
     }catch(err){
 
-        res.status(500).json({Message:"Internal server Error"});
-
+  res.status(500).json({
+    Message: "Internal server error",
+    error: err.message, 
+  });
     }
 } );
 

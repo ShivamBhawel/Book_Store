@@ -21,7 +21,7 @@ const Favourites = () => {
     };
 
     fetch();
-  }, [books]); 
+  }, []); 
 
   const handleRemoveBook = (id) => {
   setBooks((prevBooks) => prevBooks.filter((book) => book._id !== id));

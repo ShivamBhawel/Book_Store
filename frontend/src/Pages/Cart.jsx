@@ -59,7 +59,7 @@ const placeorder = async () => {
     console.log(res.data);
     alert(res.data.message);
     
-    navigate("/profile/orderHistory");
+    navigate("/Profile/UserOrderHistory");
   } catch (err) {
     console.log(err.response?.data || err.message);
   }

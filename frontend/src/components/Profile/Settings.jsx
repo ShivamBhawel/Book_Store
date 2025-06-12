@@ -1,8 +1,97 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
+import { useEffect , useState } from 'react';
+import Loader from '../Loader/Loader';
 
+//find the Error 
 const Settings = () => {
-  return (
-    <div>Settings</div>
+
+  const [Value , setValue] = useState({address:""});
+  const [ProfileData , setProfileData] = useState();
+
+  const headers = {
+    id: localStorage.getItem("id"),
+    authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
+
+  useEffect(() => {
+    const fetch = async () => {
+      try{
+            const res = await axios.get("http://localhost:2000/user/get-user-information",{headers});
+            setProfileData(res.data);
+            setValue({address:res.data.address});
+            
+         
+      }catch(err){
+        console.log(err);
+      }
+    }
+    fetch();
+  },[]);
+
+  const change = (e) => {
+    const {name,value} = e.target;
+    setValue({...Value,[name]:value});
+  };
+  const submit = async () => {
+    try{
+           const res = await axios.put("http://localhost:2000/user/update-address",Value,{headers});
+            alert(res.data.message);          
+ 
+    }catch(err){
+      console.log(err);
+    }
+  
+  };
+    return (
+    <>
+          {
+            !ProfileData && (
+              <div className='w-full h-[100%] flex items-center justify-center'>
+                <Loader />
+          </div>
+            ) }
+
+            {
+              ProfileData && (
+                <div className='h-[100%] p-0 md:p-4 text-zinc-100'> 
+                     <h1 className='text-3xl md:text-5xl font-semibold text-zinc-500 md-8'> Settings </h1>
+                     <div className='flex gap-12'> 
+                      <div className='pt-8'>
+                        <lable htmlFor="">
+                          Username
+                        </lable>
+                        <p className='p-2 rounded bg-zinc-800 mt-2 font-semibold'>
+                          {ProfileData.username}
+                        </p>
+                      </div>
+                      <div className='pt-8'> 
+                        <lable htmlFor=""> Email </lable>
+                        <p className='p-2 rounded bg-zinc-800 mt-2 font-semibold'>{ProfileData.email}</p>
+                      </div>
+                     </div>
+                     <div className='mt-4 flex flex-col '> 
+                      <lable htmlFor="" className="">
+                        Address
+                      </lable>
+                      <textarea className='p-2 rounded bg-zinc-800 mt-2 font-semibold'
+                       rows="5"
+                       placeholder='Enter your address'
+                        value={Value.address}
+                        name='address'
+                        onChange={change}
+                       />
+                     </div>
+                     <div className='mt-4 flex justify-end'> 
+                        <button className='bg-yellow-500 text-zinc-900 font-semibold px-3 py-2 rounded hover:bg-yellow-400 transition-all duration-300' 
+                        onClick={submit}>
+                          Update
+                        </button>
+                     </div>
+                </div>
+              )
+            }
+    </>
   )
 }
 
